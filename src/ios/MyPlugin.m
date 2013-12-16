@@ -31,7 +31,7 @@
 
 -(void)foundBeacon:(NSNotification*)sender {
 	NSLog(@"BEACON FOUND");
-	NSString *jsCallBack = [NSString stringWithFormat:@"%@();", self.callback];
+	NSString *jsCallBack = [NSString stringWithFormat:@"%@();", callback];
 	[self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
 }
 
