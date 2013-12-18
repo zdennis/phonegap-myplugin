@@ -5,33 +5,32 @@
 
 @implementation MyPlugin
 
--(void)retrieveGreeting:(CDVInvokedUrlCommand*)command;
+-(void)on:(CDVInvokedUrlCommand*)command;
 {
-  CDVPluginResult *pluginResult = nil;
-  NSString *arg = [command.arguments objectAtIndex:0];
+    if (!_callbackDictionary)
+        _callbackDictionary = [NSMutableDictionary dictionary];
 
-  NSArray *beacons = [GeLoSoftwareBeaconManager instance].beacons;
-  GeLoSoftwareBeacon *beacon = [beacons objectAtIndex: 0];
+    NSString *arg = [command.arguments objectAtIndex:0];
+    NSString *callback = [command.arguments objectAtIndex:1];
 
-  NSString *beaconString = [NSString stringWithFormat: @"Beacon %ld", (long) beacon.beaconId];
+    [_callbackDictionary setObject:callback forKey:arg];
 
-  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[NSString stringWithFormat:@"Hello %@. Your beacon is %@", arg, beaconString]];
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nearestBeaconChanged:) name:arg object:nil];
+    [[GeLoBeaconManager sharedInstance] startScanningForBeacons];
 }
 
--(void)registerForBeaconFound:(CDVInvokedUrlCommand*)command;
-{
-	callbackId = command.callbackId;
-	callback = @"onBeaconFound";
-	[[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(foundBeacon:) name:kGeLoBeaconFound object:nil];
-
-	[[GeLoBeaconManager sharedInstance] startScanningForBeacons];
-}
-
--(void)foundBeacon:(NSNotification*)sender {
-	NSLog(@"BEACON FOUND");
-	NSString *jsCallBack = [NSString stringWithFormat:@"%@();", callback];
-	[self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+-(void)nearestBeaconChanged:(NSNotification *)notification {
+    GeLoBeacon *beacon = notification.userInfo[@"beacon"];
+    NSError *error;
+    NSData *beaconJson = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
+    if (!beaconJson) {
+        NSLog(@"%@", error);
+    }else{
+        NSString *jsonBeaconString = [[NSString alloc] initWithData:beaconJson encoding:NSUTF8StringEncoding];
+        NSString *callback = [_callbackDictionary objectForKey:notification.name];
+        NSString *jsCallBack = [NSString stringWithFormat:@"%@(%@);", callback,jsonBeaconString];
+        [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
+    }
 }
 
 @end

@@ -3,12 +3,9 @@
 #import <Cordova/CDVPlugin.h>
 
 @interface MyPlugin : CDVPlugin
-{
-	NSString *callback;
-	NSString *callbackId;
-}
 
--(void)retrieveGreeting:(CDVInvokedUrlCommand*)command;
--(void)registerForBeaconFound:(CDVInvokedUrlCommand*)command;
+@property (nonatomic) NSMutableDictionary *callbackDictionary;
+
+-(void)on:(CDVInvokedUrlCommand*)command;
 
 @end
