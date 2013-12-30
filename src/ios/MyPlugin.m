@@ -15,14 +15,25 @@
 
     [_callbackDictionary setObject:callback forKey:arg];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(nearestBeaconChanged:) name:arg object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(event:) name:arg object:nil];
     [[GeLoBeaconManager sharedInstance] startScanningForBeacons];
 }
 
--(void)nearestBeaconChanged:(NSNotification *)notification {
-    GeLoBeacon *beacon = notification.userInfo[@"beacon"];
+-(void)event:(NSNotification *)notification {
+    NSString *eventName = notification.name;
+    NSData *beaconJson;
     NSError *error;
-    NSData *beaconJson = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
+
+    if ([eventName isEqualToString:@"GeLoNearestBeaconChanged"]) {
+        GeLoBeacon *beacon = notification.userInfo[@"beacon"];
+        beaconJson = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
+    }
+
+    if ([eventName isEqualToString:@"GeLoBeaconExpired"]) {
+        GeLoBeacon *beacon = notification.userInfo[@"beacon"];
+        beaconJson = [NSJSONSerialization dataWithJSONObject:[beacon dictionary]options:NSJSONWritingPrettyPrinted error:&error];
+    }
+
     if (!beaconJson) {
         NSLog(@"%@", error);
     }else{
