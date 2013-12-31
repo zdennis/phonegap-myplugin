@@ -38,7 +38,7 @@
     }else{
         NSString *jsonBeaconString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
         NSString *callback = [_callbacks objectForKey:notification.name];
-        NSString *jsCallBack = [NSString stringWithFormat:@"%@(%@);", callback,jsonBeaconString];
+        NSString *jsCallBack = [NSString stringWithFormat:@"%@(new MyPlugin.GeLoBeacon(%@));", callback,jsonBeaconString];
         [self.webView stringByEvaluatingJavaScriptFromString:jsCallBack];
     }
 }
