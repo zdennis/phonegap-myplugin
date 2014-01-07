@@ -17,7 +17,6 @@
     [_callbacks setObject:callback forKey:notificationName];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(event:) name:notificationName object:nil];
-    [[GeLoBeaconManager sharedInstance] startScanningForBeacons];
 }
 
 -(void)event:(NSNotification *)notification {
