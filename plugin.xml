@@ -30,8 +30,9 @@
       </feature>
     </config-file>
 
-    <header-file src="src/ios/MyPlugin.h" />
-    <source-file src="src/ios/MyPlugin.m" />
+    <header-file src="src/ios/MyPlugin.h" target-dir="MyPlugin/"/>
+    <source-file src="src/ios/MyPlugin.m" target-dir="MyPlugin/"/>
+    <source-file src="src/ios/constants.plist" target-dir="MyPlugin/"/>
 
   </platform>
 </plugin>
