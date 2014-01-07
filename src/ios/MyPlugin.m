@@ -11,12 +11,6 @@
     if (!_callbacks)
         _callbacks = [NSMutableDictionary dictionary];
 
-    if (!_constants) {
-        NSString *plistPath = [[NSBundle mainBundle] pathForResource:@"MyPluginConstants" ofType:@"plist"];
-        _constants = [NSMutableDictionary dictionary];
-        _constants = [NSDictionary dictionaryWithContentsOfFile:plistPath];
-    }
-    
     NSString *arg = [command.arguments objectAtIndex:0];
     NSString *callback = [command.arguments objectAtIndex:1];
 
