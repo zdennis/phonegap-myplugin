@@ -32,9 +32,25 @@
   return expression;
 }
 
-# pragma mark Private Helpers
+# pragma mark Private Supported GeLo Notifications
 
 -(NSString *) onGeLoBeaconFound {
+    return [self buildBeaconJSExpression];
+}
+
+-(NSString *) onGeLoNearestBeaconChanged {
+    return [self buildBeaconJSExpression];
+}
+
+
+-(NSString *) onGeLoBeaconExpired {
+  return [self buildBeaconJSExpression];
+}
+
+
+# pragma mark Private Helpers
+
+- (NSString *) buildBeaconJSExpression {
   GeLoBeacon *beacon = self.notification.userInfo[@"beacon"];
   if(!beacon){
     [NSException raise:@"MissingBeacon" format:@"Expected beacon in NSNotification but found none."];
@@ -51,15 +67,6 @@
   NSString *expression = [NSString stringWithFormat:@"%@(new MyPlugin.GeLoBeacon(%@));", self.callback, beaconJSON];
 
   return expression;
-}
-
--(NSString *) onGeLoNearestBeaconChanged {
-  return @"";
-}
-
-
--(NSString *) onGeLoBeaconExpired {
-  return @"";
 }
 
     // MyPlugin.on(K.GeLoNearestBeaconChanged, "window.map.onGeLoNearestBeaconChanged");
