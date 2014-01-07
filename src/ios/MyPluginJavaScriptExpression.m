@@ -38,17 +38,41 @@
     return [self buildBeaconJSExpression];
 }
 
--(NSString *) onGeLoNearestBeaconChanged {
-    return [self buildBeaconJSExpression];
-}
-
-
 -(NSString *) onGeLoBeaconExpired {
   return [self buildBeaconJSExpression];
 }
 
+-(NSString *) onGeLoNearestBeaconChanged {
+    return [self buildBeaconJSExpression];
+}
+
+-(NSString *) onGeLoNearestBeaconExpired {
+  return [self buildBeaconJSExpression];
+}
+
+-(NSString *) onGeLoBeaconAgedGracefully {
+  return [self buildBeaconlessJSExpression];
+}
+
+-(NSString *) onGeLoBTLEPoweredOn {
+  return [self buildBeaconlessJSExpression];
+}
+
+-(NSString *) onGeLoBTLEPoweredOff {
+  return [self buildBeaconlessJSExpression];
+}
+
+-(NSString *) onGeLoBTLEStateUnknown {
+  return [self buildBeaconlessJSExpression];
+}
+
 
 # pragma mark Private Helpers
+
+- (NSString *) buildBeaconlessJSExpression {
+  NSString *jsExpression = [NSString stringWithFormat:@"%@();", self.callback];
+  return jsExpression;
+}
 
 - (NSString *) buildBeaconJSExpression {
   GeLoBeacon *beacon = self.notification.userInfo[@"beacon"];
@@ -68,39 +92,5 @@
 
   return expression;
 }
-
-    // MyPlugin.on(K.GeLoNearestBeaconChanged, "window.map.onGeLoNearestBeaconChanged");
-    // MyPlugin.on(K.GeLoBeaconFound, "window.map.onGeLoBeaconFound");
-    // MyPlugin.on(K.GeLoBeaconExpired, "window.map.onGeLoBeaconExpired");
-
-  // <key>GeLoBeaconExpired</key>
-  // <string>GeLoBeacon</string>
-  // <key>GeLoNearestBeaconChanged</key>
-  // <string>GeLoBeacon</string>
-  // <key>GeLoNearestBeaconExpired</key>
-  // <string>GeLoBeacon</string>
-  // <key>GeLoBeaconAgedGracefully</key>
-  // <string>nil</string>
-  // <key>GeLoBTLEPoweredOn</key>
-  // <string>nil</string>
-  // <key>GeLoBTLEPoweredOff</key>
-  // <string>nil</string>
-  // <key>GeLoBTLEStateUnknown</key>
-  // <string>nil</string>
-
-
-    // GeLoNearestBeaconExpired: "GeLoNearestBeaconExpired",
-    // GeLoNearestBeaconChanged: "GeLoNearestBeaconChanged",
-    // GeLoBeaconExpired: "GeLoBeaconExpired",
-
-    // GeLoBeaconAgedGracefully: "GeLoBeaconAgedGracefully",
-    // GeLoBTLEStateUnknown: "GeLoBTLEStateUnknown",
-    // GeLoBTLEPoweredOff: "GeLoBTLEPoweredOff",
-    // GeLoBTLEPoweredOn: "GeLoBTLEPoweredOn",
-    // GeLoBTLEUnsupported: "GeLoBTLEUnsupported"
-
-
-
-
 
 @end
