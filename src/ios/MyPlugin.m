@@ -11,12 +11,12 @@
     if (!_callbacks)
         _callbacks = [NSMutableDictionary dictionary];
 
-    NSString *arg = [command.arguments objectAtIndex:0];
+    NSString *notificationName = [command.arguments objectAtIndex:0];
     NSString *callback = [command.arguments objectAtIndex:1];
 
-    [_callbacks setObject:callback forKey:arg];
+    [_callbacks setObject:callback forKey:notificationName];
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(event:) name:arg object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(event:) name:notificationName object:nil];
     [[GeLoBeaconManager sharedInstance] startScanningForBeacons];
 }
 
