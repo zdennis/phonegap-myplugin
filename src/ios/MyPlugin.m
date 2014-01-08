@@ -6,18 +6,20 @@
 
 @implementation MyPlugin
 
--(void)startScanningForBeacons:(CDVInvokedUrlCommand*)command
-{
+-(void)startScanningForBeacons:(CDVInvokedUrlCommand*)command {
     [[GeLoBeaconManager sharedInstance] startScanningForBeacons];
 }
 
--(void)stopScanningForBeacons:(CDVInvokedUrlCommand*)command
-{
+-(void)stopScanningForBeacons:(CDVInvokedUrlCommand*)command {
     [[GeLoBeaconManager sharedInstance] stopScanningForBeacons];
 }
 
--(void)on:(CDVInvokedUrlCommand*)command
-{
+-(void)setDefaultTimeToLive:(CDVInvokedUrlCommand*)command {
+    NSNumber *ttl = [command.arguments objectAtIndex:0];
+    [[GeLoBeaconManager sharedInstance] setDefaultTimeToLive:[ttl integerValue]];
+}
+
+-(void)on:(CDVInvokedUrlCommand*)command {
     if (!_callbacks)
         _callbacks = [NSMutableDictionary dictionary];
 

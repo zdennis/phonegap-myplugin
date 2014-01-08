@@ -88,6 +88,18 @@ var MyPlugin = {
       "stopScanningForBeacons",
       []
     );
+  },
+
+  setDefaultTimeToLive: function(arg){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "setDefaultTimeToLive",
+      [arg]
+    );
   }
 };
 

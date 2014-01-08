@@ -7,5 +7,8 @@
 @property (nonatomic) NSMutableDictionary *callbacks;
 
 -(void)on:(CDVInvokedUrlCommand*)command;
+-(void)stopScanningForBeacons:(CDVInvokedUrlCommand*)command;
+-(void)startScanningForBeacons:(CDVInvokedUrlCommand*)command;
+-(void)setDefaultTimeToLive:(CDVInvokedUrlCommand*)command;
 
 @end
