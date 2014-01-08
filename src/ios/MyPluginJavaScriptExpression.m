@@ -1,5 +1,4 @@
 #import "MyPluginJavaScriptExpression.h"
-#import <GeLoSDK/GeLoSDK.h>
 
 @implementation MyPluginJavaScriptExpression
 
@@ -10,6 +9,12 @@
   return [expression jsExpression];
 }
 
++(NSString *) javascriptForGeLoBeacon:(GeLoBeacon *)beacon {
+    MyPluginJavaScriptExpression *expression = [[MyPluginJavaScriptExpression alloc]
+                                                initWithGeLoBeacon:beacon];
+    return [expression jsExpression];
+}
+
 -(id) initWithNotification:(NSNotification *) notification andCallback:(NSString *) callback {
   self = [super init];
   if(self){
@@ -17,6 +22,14 @@
     _callback     = callback;
   }
   return self;
+}
+
+-(id) initWithGeLoBeacon:(GeLoBeacon *) beacon {
+    self = [super init];
+    if(self){
+        _beacon = beacon;
+    }
+    return self;
 }
 
 -(NSString *) jsExpression {
@@ -74,30 +87,37 @@
     return [self buildBeaconlessJSExpression];
 }
 
+-(NSString *) javaScriptForBeacon:(GeLoBeacon *)beacon {
+    NSError *error;
+    NSData *json = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
+
+    if(error){
+        [NSException raise:@"JSONSerializationError" format:@"Error serializing JSON for %@. Error was: %@", beacon.class, error];
+    }
+
+    NSString *beaconJSON = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+
+    return beaconJSON;
+}
+
 # pragma mark Private Helpers
 
 - (NSString *) buildBeaconlessJSExpression {
-  NSString *jsExpression = [NSString stringWithFormat:@"%@();", self.callback];
-  return jsExpression;
+    NSString *jsExpression = [NSString stringWithFormat:@"%@();", self.callback];
+    return jsExpression;
 }
 
 - (NSString *) buildBeaconJSExpression {
-  GeLoBeacon *beacon = self.notification.userInfo[@"beacon"];
-  if(!beacon){
-    [NSException raise:@"MissingBeacon" format:@"Expected beacon in NSNotification but found none."];
-  }
+    GeLoBeacon *beacon = self.notification.userInfo[@"beacon"];
+    
+    if(!beacon){
+      [NSException raise:@"MissingBeacon" format:@"Expected beacon in NSNotification but found none."];
+    }
 
-  NSError *error;
-  NSData *json = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
+    NSString *beaconJSON = [self javaScriptForBeacon:beacon];
+    NSString *expression = [NSString stringWithFormat:@"%@(new MyPlugin.GeLoBeacon(%@));", self.callback, beaconJSON];
 
-  if(error){
-    [NSException raise:@"JSONSerializationError" format:@"Error serializing JSON for %@. Error was: %@", beacon.class, error];
-  }
-
-  NSString *beaconJSON = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
-  NSString *expression = [NSString stringWithFormat:@"%@(new MyPlugin.GeLoBeacon(%@));", self.callback, beaconJSON];
-
-  return expression;
+    return expression;
 }
 
 @end

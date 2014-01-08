@@ -90,6 +90,18 @@ var MyPlugin = {
     );
   },
 
+  isScanning: function(){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "isScanning",
+      []
+    );
+  },
+
   setDefaultTimeToLive: function(arg){
     return cordova.exec(
       function(message){},
@@ -99,6 +111,66 @@ var MyPlugin = {
       "MyPlugin",
       "setDefaultTimeToLive",
       [arg]
+    );
+  },
+
+  setDefaultFalloff: function(arg){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "setDefaultFalloff",
+      [arg]
+    );
+  },
+
+  setDefaultSignalCeiling: function(arg){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "setDefaultSignalCeiling",
+      [arg]
+    );
+  },
+
+  knownBeacons: function(){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "knownBeacons",
+      []
+    );
+  },
+
+  nearestBeacon: function(){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "nearestBeacon",
+      []
+    );
+  },
+
+  unsetNearestBeacon: function(){
+    return cordova.exec(
+      function(message){},
+      function(){
+        console.log("Fail");
+      },
+      "MyPlugin",
+      "nearestBeacon",
+      []
     );
   }
 };

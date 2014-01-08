@@ -1,6 +1,5 @@
 #import "MyPlugin.h"
 #import "MyPluginJavaScriptExpression.h"
-#import <GeLoSDK/GeLoSoftwareBeaconManager.h>
 #import <GeLoSDK/GeLoSDK.h>
 
 
@@ -14,9 +13,40 @@
     [[GeLoBeaconManager sharedInstance] stopScanningForBeacons];
 }
 
+-(void)isScanning:(CDVInvokedUrlCommand*)command {
+    BOOL scanningStatus = [[GeLoBeaconManager sharedInstance] isScanning];
+    NSString *returnString = scanningStatus ? @"true" : @"false";
+    [self.webView stringByEvaluatingJavaScriptFromString:returnString];
+}
+
 -(void)setDefaultTimeToLive:(CDVInvokedUrlCommand*)command {
     NSNumber *ttl = [command.arguments objectAtIndex:0];
     [[GeLoBeaconManager sharedInstance] setDefaultTimeToLive:[ttl integerValue]];
+}
+
+-(void)setDefaultFalloff:(CDVInvokedUrlCommand*)command {
+    NSNumber *falloff = [command.arguments objectAtIndex:0];
+    [[GeLoBeaconManager sharedInstance] setDefaultFalloff:[falloff integerValue]];
+}
+
+-(void)setDefaultSignalCeiling:(CDVInvokedUrlCommand*)command {
+    NSNumber *signalCeiling = [command.arguments objectAtIndex:0];
+    [[GeLoBeaconManager sharedInstance] setDefaultSignalCeiling:[signalCeiling integerValue]];
+}
+
+-(void)knownBeacons:(CDVInvokedUrlCommand*)command {
+    NSArray *beacons = [[GeLoBeaconManager sharedInstance] knownBeacons];
+    //get beacon array json and send it
+}
+
+-(void)nearestBeacon:(CDVInvokedUrlCommand*)command {
+    GeLoBeacon *beacon = [[GeLoBeaconManager sharedInstance] nearestBeacon];
+    NSString *jsObject = [MyPluginJavaScriptExpression javascriptForGeLoBeacon:beacon];
+    [self.webView stringByEvaluatingJavaScriptFromString:jsObject];
+}
+
+-(void)unsetNearestBeacon:(CDVInvokedUrlCommand*)command {
+    [[GeLoBeaconManager sharedInstance] unsetNearestBeacon];
 }
 
 -(void)on:(CDVInvokedUrlCommand*)command {
