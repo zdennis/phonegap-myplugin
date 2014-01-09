@@ -4,15 +4,22 @@
 
 +(NSString *) jsExpressionForNotification:(NSNotification *) notification andCallback:(NSString *) callback {
   MyPluginJavaScriptExpression *expression = [[MyPluginJavaScriptExpression alloc] 
-      initWithNotification: notification 
-      andCallback:callback];
+                                              initWithNotification: notification
+                                              andCallback:callback];
   return [expression jsExpression];
 }
 
 +(NSString *) javascriptForGeLoBeacon:(GeLoBeacon *)beacon {
     MyPluginJavaScriptExpression *expression = [[MyPluginJavaScriptExpression alloc]
                                                 initWithGeLoBeacon:beacon];
-    return [expression jsExpression];
+    return [expression javascriptForBeacon:beacon];
+}
+
++(NSString *) javascriptForGeLoBeaconArray:(NSArray *)beacons {
+    MyPluginJavaScriptExpression *expression = [[MyPluginJavaScriptExpression alloc]
+                                                initWithGeLoBeaconArray:beacons];
+
+    return [expression javascriptForBeaconArray];
 }
 
 -(id) initWithNotification:(NSNotification *) notification andCallback:(NSString *) callback {
@@ -28,6 +35,14 @@
     self = [super init];
     if(self){
         _beacon = beacon;
+    }
+    return self;
+}
+
+-(id) initWithGeLoBeaconArray:(NSArray *) beaconArray {
+    self = [super init];
+    if(self){
+        _beaconArray = beaconArray;
     }
     return self;
 }
@@ -87,7 +102,7 @@
     return [self buildBeaconlessJSExpression];
 }
 
--(NSString *) javaScriptForBeacon:(GeLoBeacon *)beacon {
+-(NSString *) javascriptForBeacon:(GeLoBeacon *)beacon {
     NSError *error;
     NSData *json = [NSJSONSerialization dataWithJSONObject:[beacon dictionary] options:NSJSONWritingPrettyPrinted error:&error];
 
@@ -100,6 +115,25 @@
     return beaconJSON;
 }
 
+-(NSString *) javascriptForBeaconArray {
+    NSString *jsBeacons = [NSString stringWithFormat:@"["];
+
+    for (int i = 0; i < [_beaconArray count]; i++) {
+        GeLoBeacon *beacon = _beaconArray[i];
+        NSString *beaconJSON = [self javascriptForBeacon:beacon];
+
+        if (i == [_beaconArray count] - 1) {
+            beaconJSON = [beaconJSON stringByAppendingString:@"]"];
+        }else{
+            beaconJSON = [beaconJSON stringByAppendingString:@", "];
+        }
+
+        jsBeacons = [jsBeacons stringByAppendingString:beaconJSON];
+    }
+
+    return jsBeacons;
+}
+
 # pragma mark Private Helpers
 
 - (NSString *) buildBeaconlessJSExpression {
@@ -108,13 +142,13 @@
 }
 
 - (NSString *) buildBeaconJSExpression {
-    GeLoBeacon *beacon = self.notification.userInfo[@"beacon"];
+    _beacon = self.notification.userInfo[@"beacon"];
     
-    if(!beacon){
+    if(!_beacon){
       [NSException raise:@"MissingBeacon" format:@"Expected beacon in NSNotification but found none."];
     }
 
-    NSString *beaconJSON = [self javaScriptForBeacon:beacon];
+    NSString *beaconJSON = [self javascriptForBeacon:_beacon];
     NSString *expression = [NSString stringWithFormat:@"%@(new MyPlugin.GeLoBeacon(%@));", self.callback, beaconJSON];
 
     return expression;

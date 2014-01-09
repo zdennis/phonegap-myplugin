@@ -138,11 +138,19 @@ var MyPlugin = {
     );
   },
 
-  knownBeacons: function(){
+  knownBeacons: function(callback){
     return cordova.exec(
-      function(message){},
+      function(beacons){
+        //alert(message);
+        var jsonObj = $.parseJSON(beacons);
+        var beaconArray = [];
+        $.each(jsonObj, function(idx, beacon) {
+          beaconArray.push(new MyPlugin.GeLoBeacon(beacon));
+        })
+        callback(beaconArray);
+      },
       function(){
-        console.log("Fail");
+        callback([]);
       },
       "MyPlugin",
       "knownBeacons",
@@ -150,11 +158,14 @@ var MyPlugin = {
     );
   },
 
-  nearestBeacon: function(){
+  nearestBeacon: function(callback){
     return cordova.exec(
-      function(message){},
+      function(beacon){
+        var jsonObj = $.parseJSON(beacon);
+        callback(new MyPlugin.GeLoBeacon(jsonObj));
+      },
       function(){
-        console.log("Fail");
+        callback({});
       },
       "MyPlugin",
       "nearestBeacon",
@@ -169,7 +180,7 @@ var MyPlugin = {
         console.log("Fail");
       },
       "MyPlugin",
-      "nearestBeacon",
+      "unsetNearestBeacon",
       []
     );
   }

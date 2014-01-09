@@ -35,15 +35,39 @@
 }
 
 -(void)knownBeacons:(CDVInvokedUrlCommand*)command {
+    NSString *jsResult = nil;
+    CDVPluginResult *result = nil;
     NSArray *beacons = [[GeLoBeaconManager sharedInstance] knownBeacons];
-    //get beacon array json and send it
+
+    if ([beacons count]) {
+        NSString *jsonArray = [MyPluginJavaScriptExpression javascriptForGeLoBeaconArray:beacons];
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsonArray];
+        jsResult = [result toSuccessCallbackString:command.callbackId];
+    }else{
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        jsResult = [result toErrorCallbackString:command.callbackId];
+    }
+
+    [self writeJavascript:jsResult];
 }
 
 -(void)nearestBeacon:(CDVInvokedUrlCommand*)command {
+    NSString *jsResult = nil;
+    CDVPluginResult *result = nil;
+
     GeLoBeacon *beacon = [[GeLoBeaconManager sharedInstance] nearestBeacon];
-    NSString *jsObject = [MyPluginJavaScriptExpression javascriptForGeLoBeacon:beacon];
-    [self.webView stringByEvaluatingJavaScriptFromString:jsObject];
+    if (beacon) {
+        NSString *jsObject = [MyPluginJavaScriptExpression javascriptForGeLoBeacon:beacon];
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:jsObject];
+        jsResult = [result toSuccessCallbackString:command.callbackId];
+    }else{
+        result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        jsResult = [result toErrorCallbackString:command.callbackId];
+    }
+
+    [self writeJavascript:jsResult];
 }
+
 
 -(void)unsetNearestBeacon:(CDVInvokedUrlCommand*)command {
     [[GeLoBeaconManager sharedInstance] unsetNearestBeacon];
