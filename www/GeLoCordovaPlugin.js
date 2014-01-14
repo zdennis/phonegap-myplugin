@@ -1,3 +1,7 @@
+/** @module GeLoCordovaPlugin */
+var exports = {};
+exports.PluginName = "GeLoCordovaPlugin";
+
 /**
   Helper method for enforcing expectations about arguments to methods.
 
@@ -48,9 +52,6 @@ var expectArgIsFunction = function(argValue, argName){
 var expectArgIsNumber = function(argValue, argName){
   expect(argValue, argName, { type: (typeof 1) });
 };
-
-/** @module GeLoCordovaPlugin */
-var exports = {};
 
 /*
   The set of currently supported events recognized by the GeLoBeaconManager.
@@ -106,7 +107,7 @@ exports.on = function(sdkConstant, successCallback, failureCallback){
     function(){
       failureCallback.apply(this, arguments);
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "on",
     [sdkConstant, successCallback]
   );
@@ -130,7 +131,7 @@ exports.startScanningForBeacons = function(delayInMilliseconds){
       function(){
         console.log("Fail");
       },
-      "GeLoCordovaPlugin",
+      exports.PluginName,
       "startScanningForBeacons",
       []
     );
@@ -150,7 +151,7 @@ exports.stopScanningForBeacons = function(){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "stopScanningForBeacons",
     []
   );
@@ -173,7 +174,7 @@ exports.isScanning = function(callback){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "isScanning",
     []
   );
@@ -194,7 +195,7 @@ exports.setDefaultTimeToLive = function(seconds){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "setDefaultTimeToLive",
     [seconds]
   );
@@ -216,7 +217,7 @@ exports.setDefaultFalloff = function(signalStrength){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "setDefaultFalloff",
     [signalStrength]
   );
@@ -236,7 +237,7 @@ exports.setDefaultSignalCeiling = function(signalStrength){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "setDefaultSignalCeiling",
     [signalStrength]
   );
@@ -263,7 +264,7 @@ exports.knownBeacons = function(callback){
     function(){
       callback([]);
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "knownBeacons",
     []
   );
@@ -287,7 +288,7 @@ exports.nearestBeacon = function(callback){
     function(){
       callback({});
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "nearestBeacon",
     []
   );
@@ -302,7 +303,7 @@ exports.unsetNearestBeacon = function(){
     function(){
       console.log("Fail");
     },
-    "GeLoCordovaPlugin",
+    exports.PluginName,
     "unsetNearestBeacon",
     []
   );
