@@ -131,7 +131,7 @@ var GeLoCordovaPlugin = (function(){
         return result;
       };
 
-      setTimeout(_startScanning, delayMilliseconds);
+      setTimeout(_startScanning, delayInMilliseconds);
     },
 
     /*
