@@ -62,21 +62,8 @@ var GeLoCordovaPlugin = {
       If two arguments are supplied, the first is a callback function to call immediately after telling the GeLoBeaconManager
       to start scanning and the second argument is the number of milliseconds to delay before starting the scan.
   */
-  startScanningForBeacons: function(args){
-    var delayMilliseconds = 0,
-        fn = function(){};
-
-    if(arguments.length === 1 && (typeof arguments[0] === "Number")){
-      delayMilliseconds = arguments[0];
-    } else if(arguments.length === 2){
-      if(typeof argumenst[0] === "Function"){
-        fn = arguments[0];
-      }
-
-      if(typeof arguments[1] === "Number"){
-        delayMilliseconds = arguments[1];
-      }
-    }
+  startScanningForBeacons: function(delayInMilliseconds){
+    if(!delayInMilliseconds) delayInMilliseconds = 0;
 
     var _startScanning = function(){
       var result = cordova.exec(
@@ -88,11 +75,10 @@ var GeLoCordovaPlugin = {
         "startScanningForBeacons",
         []
       );
-      fn();
       return result;
     };
 
-    setTimeout(_startScanning, delayMilliseconds)
+    setTimeout(_startScanning, delayMilliseconds);
   },
 
   /*
