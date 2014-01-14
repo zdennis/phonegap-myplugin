@@ -21,11 +21,7 @@ var GeLoCordovaPlugin = {
 
     @constructor
     @param {object} beacon Information about a GeLo beacon.
-    @param {number} beacon.beaconId The id of a beacon.
-    @param {number} beacon.signalStrength The signal strength used to dermine nearest beacon.
-    @param {number} beacon.receievedRSSI The RSSI of a beacon.
-    @param {number} beacon.timeToLive The current time before the beacon reference is destoyed if a new signal is not received.
-    @param {number} beacon.txPower The transmission power of a beacon. 2: High 1: Medium 0: Low
+      Expects beacon to have properties: beaconId, signalStrength, receivedRSSI, timeToLive, and txPower.
   */
   GeLoBeacon: function(beacon) {
     this.beaconId = beacon.beaconId;
@@ -58,10 +54,13 @@ var GeLoCordovaPlugin = {
   },
 
   /*
-    Notifies the beacon manager to start scanning for beacons.
+    Notifies the beacon manager to start scanning for beacons. If you are interested in knowing when
+    scanning has actually started then listen for the GeLoScanningStarted event.
 
-    @param {array} args An array of optional arguements. A single argument will signify a period to scan for.
-      If a second arguement is supplied, it's expected to be a function that's called after the scanning period.
+    @param {array} args An array of optional arguments.
+      If a single argument is given it will be the number of milliseconds to delay before starting the scan.
+      If two arguments are supplied, the first is a callback function to call immediately after telling the GeLoBeaconManager
+      to start scanning and the second argument is the number of milliseconds to delay before starting the scan.
   */
   startScanningForBeacons: function(args){
     var delayMilliseconds = 0,
@@ -97,7 +96,8 @@ var GeLoCordovaPlugin = {
   },
 
   /*
-    Notifies the beacon manager to stop scanning for beacons.
+    Notifies the beacon manager to stop scanning for beacons. If you are interested in knowing when
+    scanning has actually stopped then listen for the GeLoScanningStopped event.
   */
   stopScanningForBeacons: function(){
     return cordova.exec(
@@ -133,11 +133,13 @@ var GeLoCordovaPlugin = {
   },
 
   /*
-    Sets the time limit for the beacon manager to maintain a reference to a known beacon.
+    Sets the time limit for the beacon manager to maintain a reference to a known beacon. If the beacon
+    hasn't been seen in the given number of seconds then the beacon manager will expire the beacon
+    and will forget about it. If you are interested in this event listen for the GeLoBeaconExpired event.
 
-    @param {number} arg The time in seconds that the timer starts at.
+    @param {number} seconds The time in seconds that the timer starts at.
   */
-  setDefaultTimeToLive: function(arg){
+  setDefaultTimeToLive: function(seconds){
     return cordova.exec(
       function(message){},
       function(){
@@ -145,13 +147,14 @@ var GeLoCordovaPlugin = {
       },
       "GeLoCordovaPlugin",
       "setDefaultTimeToLive",
-      [arg]
+      [seconds]
     );
   },
 
 
   /*
-    Sets the minimum signal strength threshold for beacon recognition.
+    Sets the minimum signal strength threshold for beacon recognition. If a beacon's signal is weaker than
+    this then the beacon manager will pretend to not have seen it.
 
     @param {number} arg The signal strength, values are negative and the closer to zero the stronger the signal strenth.
   */
@@ -193,8 +196,8 @@ var GeLoCordovaPlugin = {
   knownBeacons: function(callback){
     return cordova.exec(
       function(beacons){
-        var jsonObj = $.parseJSON(beacons);
-        var beaconArray = [];
+        var jsonObj = $.parseJSON(beacons),
+            beaconArray = [];
         $.each(jsonObj, function(idx, beacon) {
           beaconArray.push(new GeLoCordovaPlugin.GeLoBeacon(beacon));
         })
@@ -210,7 +213,8 @@ var GeLoCordovaPlugin = {
   },
 
   /*
-    Retrieves the current nearest beacon.
+    Retrieves the current nearest beacon. If you are interested in being notified of
+    when the nearest beacon changes then listen for the GeLoNearestBeaconChanged event.
 
     @callback callback
     @returns {object} The nearest GeLoBeacon.
