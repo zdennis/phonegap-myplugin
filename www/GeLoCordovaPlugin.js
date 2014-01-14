@@ -1,4 +1,53 @@
 var GeLoCordovaPlugin = (function(){
+
+  /*
+    Helper method for enforcing expectations about arguments to methods.
+
+    @param {argValue} the value that will have an expectation made against it.
+    @param {argName} the name of the value to be used in the message of a thrown exception.
+    @param {options} an object literal of options for the expecation. Currently only supports 'type'.
+  */
+  var expect = function(argValue, argName, options){
+    if(!options || !options.type){
+      throw {
+        name:        "ArgumentTypeError",
+        message:     "Expected options to contain a 'type' property but it didn't.",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
+    var actualType = (typeof argValue),
+        expectedType = options.type;
+
+    if(actualType !== expectedType){
+      throw {
+        name:        "ArgumentTypeError",
+        message:     "Expected " + argName + " to be a " + expectedType + ", but it was: " + argValue + " ("  + actualType + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+  };
+
+  /*
+    Helper method to make an expectation around an argument being a function.
+
+    @param {argValue} the value that will have an expectation made against it.
+    @param {argName} the name of the value to be used in the message of a thrown exception.
+  */
+  var expectArgIsFunction = function(argValue, argName){
+    expect(argValue, argName, { type: (typeof new Function) });
+  };
+
+  /*
+    Helper method to make an expectation around an argument being a number.
+
+    @param {argValue} the value that will have an expectation made against it.
+    @param {argName} the name of the value to be used in the message of a thrown exception.
+  */
+  var expectArgIsNumber = function(argValue, argName){
+    expect(argValue, argName, { type: (typeof 1) });
+  };
+
   return {
     /*
       The set of currently supported constants recognized by the GeLoBeaconManager.
@@ -40,14 +89,8 @@ var GeLoCordovaPlugin = (function(){
       @callback failureCallback
       @param {string} sdkConstant The constant used to register for a notification. Use a constant provided by the plugin.
     */
-    on: function(sdkConstant, successCallback, failureCallback){
-      if(typeof successCallback !== "function"){
-        throw {
-          name:        "ArgumentError",
-          message:     "successCallback should have been a function, but it was: " + successCallback + " ("  +(typeof successCallback) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+    on: function(sdkConstant, successCallback){
+      expectArgIsFunction(successCallback, "successCallback");
 
       return cordova.exec(
         function(message){
@@ -73,13 +116,7 @@ var GeLoCordovaPlugin = (function(){
     startScanningForBeacons: function(delayInMilliseconds){
       if(!delayInMilliseconds) delayInMilliseconds = 0;
 
-      if(typeof delayInMilliseconds !== "number"){
-        throw {
-          name:        "ArgumentError",
-          message:     "delayInMilliseconds should have been a number, but it was: " + delayInMilliseconds + " ("  +(typeof delayInMilliseconds) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsNumber(delayInMilliseconds, "delayInMilliseconds");
 
       var _startScanning = function(){
         var result = cordova.exec(
@@ -120,13 +157,8 @@ var GeLoCordovaPlugin = (function(){
       @returns {boolean} Scanning status.
     */
     isScanning: function(callback){
-      if(typeof callback !== "function"){
-        throw {
-          name:        "ArgumentError",
-          message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsFunction(callback, "callback");
+
       return cordova.exec(
         function(message){
           var jsonObj = $.parseJSON(message);
@@ -149,13 +181,7 @@ var GeLoCordovaPlugin = (function(){
       @param {number} seconds The time in seconds that the timer starts at.
     */
     setDefaultTimeToLive: function(seconds){
-      if(typeof seconds !== "number"){
-        throw {
-          name:        "ArgumentError",
-          message:     "seconds should have been a number, but it was: " + seconds + " ("  +(typeof seconds) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsNumber(seconds, "seconds");
 
       return cordova.exec(
         function(message){},
@@ -177,13 +203,7 @@ var GeLoCordovaPlugin = (function(){
         of -60 to -100 RSSI. The closer the value is to 0, the stronger the expected signal strength.
     */
     setDefaultFalloff: function(signalStrength){
-      if(typeof signalStrength !== "number"){
-        throw {
-          name:        "ArgumentError",
-          message:     "signalStrength should have been a number, but it was: " + signalStrength + " ("  +(typeof signalStrength) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsNumber(signalStrength, "signalStrength");
 
       return cordova.exec(
         function(message){},
@@ -203,13 +223,7 @@ var GeLoCordovaPlugin = (function(){
         of -60 to -100 RSSI. The closer the value is to 0, the stronger the expected signal strength.
     */
     setDefaultSignalCeiling: function(signalStrength){
-      if(typeof signalStrength !== "number"){
-        throw {
-          name:        "ArgumentError",
-          message:     "signalStrength should have been a number, but it was: " + signalStrength + " ("  +(typeof signalStrength) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsNumber(signalStrength, "signalStrength");
 
       return cordova.exec(
         function(message){},
@@ -229,13 +243,7 @@ var GeLoCordovaPlugin = (function(){
       @returns {array} An array that contains GeLoBeacon objects recorded by the beacon manager.
     */
     knownBeacons: function(callback){
-      if(typeof callback !== "function"){
-        throw {
-          name:        "ArgumentError",
-          message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsFunction(callback, "callback");
 
       return cordova.exec(
         function(beacons){
@@ -263,13 +271,7 @@ var GeLoCordovaPlugin = (function(){
       @returns {object} The nearest GeLoBeacon.
     */
     nearestBeacon: function(callback){
-      if(typeof callback !== "function"){
-        throw {
-          name:        "ArgumentError",
-          message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
-          toString:    function(){return this.name + ": " + this.message}
-        }
-      }
+      expectArgIsFunction(callback, "callback");
 
       return cordova.exec(
         function(beacon){
