@@ -39,6 +39,14 @@ var GeLoCordovaPlugin = {
     @param {string} sdkConstant The constant used to register for a notification. Use a constant provided by the plugin.
   */
   on: function(sdkConstant, callback){
+    if(typeof callback !== "function"){
+      throw {
+        name:        "ArgumentError",
+        message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(message){
         var jsonObj = $.parseJSON(message);
