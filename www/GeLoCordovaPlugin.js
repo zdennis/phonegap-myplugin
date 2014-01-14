@@ -48,7 +48,7 @@ var GeLoCordovaPlugin = (function(){
     expect(argValue, argName, { type: (typeof 1) });
   };
 
-  return {
+  var GeLoCordovaPlugin = {
     /*
       The set of currently supported constants recognized by the GeLoBeaconManager.
     */
@@ -302,6 +302,8 @@ var GeLoCordovaPlugin = (function(){
       );
     }
   };
+
+  return GeLoCordovaPlugin;
 })();
 
 module.exports = GeLoCordovaPlugin;
