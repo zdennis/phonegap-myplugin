@@ -160,8 +160,7 @@ exports.stopScanningForBeacons = function(){
 /**
   Returns whether the beacon manager is currently scanning.
 
-  @callback callback
-  @returns {boolean} Scanning status.
+  @param {function} callback The function to call with the boolean answer to whether or not scanning is currently happening.
 */
 exports.isScanning = function(callback){
   expectArgIsFunction(callback, "callback");
@@ -246,8 +245,7 @@ exports.setDefaultSignalCeiling = function(signalStrength){
 /**
   Retrieves the current list of known beacons.
 
-  @callback callback
-  @returns {array} An array that contains GeLoBeacon objects recorded by the beacon manager.
+  @param {function} callback The function to call with the list of known beacons (as an array of GeLoBeacon objects).
 */
 exports.knownBeacons = function(callback){
   expectArgIsFunction(callback, "callback");
@@ -274,8 +272,7 @@ exports.knownBeacons = function(callback){
   Retrieves the current nearest beacon. If you are interested in being notified of
   when the nearest beacon changes then listen for the GeLoNearestBeaconChanged event.
 
-  @callback callback
-  @returns {object} The nearest GeLoBeacon.
+  @param {function} callback The function to call with the nearestBeacon (as a GeLoBeacon).
 */
 exports.nearestBeacon = function(callback){
   expectArgIsFunction(callback, "callback");
