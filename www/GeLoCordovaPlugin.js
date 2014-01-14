@@ -65,10 +65,8 @@ var GeLoCordovaPlugin = {
     Notifies the beacon manager to start scanning for beacons. If you are interested in knowing when
     scanning has actually started then listen for the GeLoScanningStarted event.
 
-    @param {array} args An array of optional arguments.
-      If a single argument is given it will be the number of milliseconds to delay before starting the scan.
-      If two arguments are supplied, the first is a callback function to call immediately after telling the GeLoBeaconManager
-      to start scanning and the second argument is the number of milliseconds to delay before starting the scan.
+    @param {number} delayInMilliseconds An optional argument. If an arguement is given it will be the
+      number of milliseconds to delay before starting the scan.
   */
   startScanningForBeacons: function(delayInMilliseconds){
     if(!delayInMilliseconds) delayInMilliseconds = 0;
@@ -120,6 +118,13 @@ var GeLoCordovaPlugin = {
     @returns {boolean} Scanning status.
   */
   isScanning: function(callback){
+    if(typeof callback !== "function"){
+      throw {
+        name:        "ArgumentError",
+        message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
     return cordova.exec(
       function(message){
         var jsonObj = $.parseJSON(message);
@@ -142,6 +147,14 @@ var GeLoCordovaPlugin = {
     @param {number} seconds The time in seconds that the timer starts at.
   */
   setDefaultTimeToLive: function(seconds){
+    if(typeof seconds !== "number"){
+      throw {
+        name:        "ArgumentError",
+        message:     "seconds should have been a number, but it was: " + seconds + " ("  +(typeof seconds) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(message){},
       function(){
@@ -158,9 +171,18 @@ var GeLoCordovaPlugin = {
     Sets the minimum signal strength threshold for beacon recognition. If a beacon's signal is weaker than
     this then the beacon manager will pretend to not have seen it.
 
-    @param {number} arg The signal strength, values are negative and the closer to zero the stronger the signal strenth.
+    @param {number} signalStrength The signal strength of a beacon. The value must be negative, and within a range
+      of -60 to -100 RSSI. The closer the value is to 0, the stronger the expected signal strength.
   */
-  setDefaultFalloff: function(arg){
+  setDefaultFalloff: function(signalStrength){
+    if(typeof signalStrength !== "number"){
+      throw {
+        name:        "ArgumentError",
+        message:     "signalStrength should have been a number, but it was: " + signalStrength + " ("  +(typeof signalStrength) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(message){},
       function(){
@@ -168,16 +190,25 @@ var GeLoCordovaPlugin = {
       },
       "GeLoCordovaPlugin",
       "setDefaultFalloff",
-      [arg]
+      [signalStrength]
     );
   },
 
   /*
     Sets the maximum signal strength threshold for beacon recognition.
 
-    @param {number} arg The signal strengh, values are negative and the closer to zero the stronger the signal strength.
+    @param {number} signalStrength The signal strength of a beacon. The value must be negative, and within a range
+      of -60 to -100 RSSI. The closer the value is to 0, the stronger the expected signal strength.
   */
-  setDefaultSignalCeiling: function(arg){
+  setDefaultSignalCeiling: function(signalStrength){
+    if(typeof signalStrength !== "number"){
+      throw {
+        name:        "ArgumentError",
+        message:     "signalStrength should have been a number, but it was: " + signalStrength + " ("  +(typeof signalStrength) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(message){},
       function(){
@@ -185,7 +216,7 @@ var GeLoCordovaPlugin = {
       },
       "GeLoCordovaPlugin",
       "setDefaultSignalCeiling",
-      [arg]
+      [signalStrength]
     );
   },
 
@@ -196,6 +227,14 @@ var GeLoCordovaPlugin = {
     @returns {array} An array that contains GeLoBeacon objects recorded by the beacon manager.
   */
   knownBeacons: function(callback){
+    if(typeof callback !== "function"){
+      throw {
+        name:        "ArgumentError",
+        message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(beacons){
         var jsonObj = $.parseJSON(beacons),
@@ -222,6 +261,14 @@ var GeLoCordovaPlugin = {
     @returns {object} The nearest GeLoBeacon.
   */
   nearestBeacon: function(callback){
+    if(typeof callback !== "function"){
+      throw {
+        name:        "ArgumentError",
+        message:     "callback should have been a function, but it was: " + callback + " ("  +(typeof callback) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     return cordova.exec(
       function(beacon){
         var jsonObj = $.parseJSON(beacon);
