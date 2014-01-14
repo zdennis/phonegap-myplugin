@@ -65,6 +65,14 @@ var GeLoCordovaPlugin = {
   startScanningForBeacons: function(delayInMilliseconds){
     if(!delayInMilliseconds) delayInMilliseconds = 0;
 
+    if(typeof delayInMilliseconds !== "number"){
+      throw {
+        name:        "ArgumentError",
+        message:     "delayInMilliseconds should have been a number, but it was: " + delayInMilliseconds + " ("  +(typeof delayInMilliseconds) + ")",
+        toString:    function(){return this.name + ": " + this.message}
+      }
+    }
+
     var _startScanning = function(){
       var result = cordova.exec(
         function(message){},
