@@ -53,9 +53,9 @@ var expectArgIsNumber = function(argValue, argName){
 var exports = {};
 
 /*
-  The set of currently supported constants recognized by the GeLoBeaconManager.
+  The set of currently supported events recognized by the GeLoBeaconManager.
 */
-exports.Constants = {
+exports.Events = {
   GeLoNearestBeaconExpired: "GeLoNearestBeaconExpired",
   GeLoNearestBeaconChanged: "GeLoNearestBeaconChanged",
   GeLoBeaconExpired: "GeLoBeaconExpired",
