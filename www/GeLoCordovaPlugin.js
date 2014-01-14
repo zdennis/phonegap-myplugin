@@ -85,12 +85,15 @@ var GeLoCordovaPlugin = (function(){
       Registers for a notification sent by the GeLoBeaconManager. The GeLoBeaconManager communicates beacon events through
         these notifications.
 
-      @callback successCallback
-      @callback failureCallback
       @param {string} sdkConstant The constant used to register for a notification. Use a constant provided by the plugin.
+      @callback successCallback Required callback function that gets executed when the registered event fires successfully.
+      @callback failureCallback Optional callback function that gets executed when the registered event fires unsuccessfully.
     */
-    on: function(sdkConstant, successCallback){
+    on: function(sdkConstant, successCallback, failureCallback){
+      failureCallback = failureCallback || function(){};
+
       expectArgIsFunction(successCallback, "successCallback");
+      expectArgIsFunction(failureCallback, "failureCallback");
 
       return cordova.exec(
         function(message){
@@ -98,7 +101,7 @@ var GeLoCordovaPlugin = (function(){
           successCallback(jsonObj);
         },
         function(){
-          console.log("Fail");
+          failureCallback.apply(this, arguments);
         },
         "GeLoCordovaPlugin",
         "on",
