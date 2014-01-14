@@ -1,4 +1,4 @@
-var MyPlugin = {
+var GeLoCordovaPlugin = {
   /*
     The set of currently supported constants recognized by the GeLoBeaconManager.
   */
@@ -50,7 +50,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "on",
       [sdkConstant, callback]
     );
@@ -84,7 +84,7 @@ var MyPlugin = {
         function(){
           console.log("Fail");
         },
-        "MyPlugin",
+        "GeLoCordovaPlugin",
         "startScanningForBeacons",
         []
       );
@@ -104,7 +104,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "stopScanningForBeacons",
       []
     );
@@ -125,7 +125,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "isScanning",
       []
     );
@@ -142,7 +142,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "setDefaultTimeToLive",
       [arg]
     );
@@ -160,7 +160,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "setDefaultFalloff",
       [arg]
     );
@@ -177,7 +177,7 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "setDefaultSignalCeiling",
       [arg]
     );
@@ -195,14 +195,14 @@ var MyPlugin = {
         var jsonObj = $.parseJSON(beacons);
         var beaconArray = [];
         $.each(jsonObj, function(idx, beacon) {
-          beaconArray.push(new MyPlugin.GeLoBeacon(beacon));
+          beaconArray.push(new GeLoCordovaPlugin.GeLoBeacon(beacon));
         })
         callback(beaconArray);
       },
       function(){
         callback([]);
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "knownBeacons",
       []
     );
@@ -218,12 +218,12 @@ var MyPlugin = {
     return cordova.exec(
       function(beacon){
         var jsonObj = $.parseJSON(beacon);
-        callback(new MyPlugin.GeLoBeacon(jsonObj));
+        callback(new GeLoCordovaPlugin.GeLoBeacon(jsonObj));
       },
       function(){
         callback({});
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "nearestBeacon",
       []
     );
@@ -238,11 +238,11 @@ var MyPlugin = {
       function(){
         console.log("Fail");
       },
-      "MyPlugin",
+      "GeLoCordovaPlugin",
       "unsetNearestBeacon",
       []
     );
   }
 };
 
-module.exports = MyPlugin;
+module.exports = GeLoCordovaPlugin;
