@@ -36,7 +36,8 @@ var GeLoCordovaPlugin = {
   },
 
   /*
-    Registers for a notification sent by the GeLoBeaconManager
+    Registers for a notification sent by the GeLoBeaconManager. The GeLoBeaconManager communicates beacon events through
+      these notifications.
 
     @callback callback
     @param {string} sdkConstant The constant used to register for a notification. Use a constant provided by the plugin.
